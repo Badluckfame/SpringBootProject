@@ -18,7 +18,7 @@ public class MerchantBootAppExceptionHandler extends ResponseEntityExceptionHand
 		structure.setStatusCode(HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.NOT_FOUND);
 	}
-	@ExceptionHandler
+	@ExceptionHandler(InvalidCredentialsException.class)
 	public ResponseEntity<ResponseStructure<String>>handleICE(InvalidCredentialsException e){
 		ResponseStructure<String> structure=new ResponseStructure<>();
 		structure.setMessage(e.getMessage());

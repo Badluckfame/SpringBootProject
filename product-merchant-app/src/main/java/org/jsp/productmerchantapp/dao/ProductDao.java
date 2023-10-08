@@ -19,7 +19,7 @@ public class ProductDao {
 	public Product updateProduct(Product product) {
 		return repository.save(product);
 	}
-	public Optional<Product> fingById(int id){
+	public Optional<Product> findById(int id){
 		return repository.findById(id);
 	}
 	public List<Product> findByMerchantId(int merchant_id){
@@ -29,10 +29,19 @@ public class ProductDao {
 		return repository.findByName(name);
 	}
 	public List<Product> findByBrand(String brand){
-		return repository.findByName(brand);
+		return repository.findByBrand(brand);
 	}
 	public List<Product> findByCategory(String category){
-		return repository.findByName(category);
+		return repository.findByCategory(category);
+	}
+	public boolean deleteById(int id) {
+		Optional<Product>recProduct=findById(id);
+		if(recProduct.isPresent()) {
+			repository.delete(recProduct.get());
+			repository.deleteById(id);
+			return true;
+		}
+		return false;
 	}
 
 }

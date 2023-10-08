@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class ProductService {
@@ -26,6 +27,7 @@ public class ProductService {
 		Optional<Merchant> recMerchant=merchantDao.findById(merchant_id);
 		if(recMerchant.isPresent()) {
 			Merchant m=recMerchant.get();
+			product.setMerchant(m);
 			m.getProducts().add(product);
 			merchantDao.updateMerchant(m);
 			dao.saveProduct(product);
@@ -52,7 +54,7 @@ public class ProductService {
 	}
 	public ResponseEntity<ResponseStructure<Product>>findById(int id){
 		ResponseStructure<Product>structure=new ResponseStructure<>();
-		Optional<Product> recProduct=dao.fingById(id);
+		Optional<Product> recProduct=dao.findById(id);
 		if(recProduct.isPresent()) {
 			structure.setMessage("Product Found");
 			structure.setData(recProduct.get());
@@ -110,6 +112,17 @@ public class ProductService {
 	    }
 	    
 	    throw new InvalidCredentialsException();
+	}
+	public ResponseEntity<ResponseStructure<String>>deleteById(@PathVariable int id){
+		ResponseStructure<String> structure=new ResponseStructure<>();
+		boolean deleted=dao.deleteById(id);
+		if(deleted) {
+			structure.setData("Product Deleted");
+			structure.setMessage("Product Found");
+			structure.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<ResponseStructure<String>>(structure,HttpStatus.OK);
+		}
+		throw new IdNotFoundException();
 	}
 
 
